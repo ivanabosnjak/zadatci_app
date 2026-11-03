@@ -46,3 +46,12 @@ Promijenila poruku pogreške u "Dogodila se greska".
 Dodala ispod popisa tekst koji prikazuje broj završenih zadataka.
 Omotala ListView u RefreshIndicator tako da povlačenje prema dolje 
 ponovno dohvaća podatke.
+
+
+## Treca zadaca
+
+Bolje je zadati boju u temi nego na svakom widgetu jer je tako brže i dosljednije. 
+
+Validate() pokreće provjeru unosa forme, a validator vraća null za ispravan unos, jer u tom slucaju su sve provjere uspjesno prodjene i dolazi do linije return null.
+
+Nakon await Navigator.push provjerava mounted da se uvjeri postoji li widget jos uvijek.

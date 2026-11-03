@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'zadatak.dart';
 
 class FormaEkran extends StatefulWidget {
@@ -28,7 +29,15 @@ class _FormaEkranState extends State<FormaEkran> {
 
     if (tekst.isEmpty) return 'Unesite naslov';
     if (tekst.length < 3) return 'Naslov mora imati najmanje 3 znaka';
-
+    if (widget.postojeci.any(
+      (z) => z.naslov.toLowerCase() == tekst.toLowerCase(),
+    )) {
+      return 'Zadatak s tim naslovom već postoji';
+    }
+    if (tekst.length > 40) return 'Naslov ne smije biti dulji od 40 znakova';
+    if (tekst[0] != tekst[0].toUpperCase()) {
+      return 'Naslov mora početi velikim slovom';
+    }
     return null;
   }
 
@@ -80,14 +89,12 @@ class _FormaEkranState extends State<FormaEkran> {
                 contentPadding: EdgeInsets.zero,
               ),
               const SizedBox(height: 8),
-              FilledButton(
-                onPressed: _spremi,
-                child: const Text('Spremi'),
-              ),
+              FilledButton(onPressed: _spremi, child: const Text('Spremi')),
+              const SizedBox(height: 8),
               OutlinedButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Odustani'),
-              ), 
+              ),
             ],
           ),
         ),

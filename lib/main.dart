@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'forma_ekran.dart';
 import 'repozitorij.dart';
 import 'zadatak.dart';
@@ -40,11 +41,11 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
 
     if (!mounted) return;
 
-  setState (() {
-    _zadaci
-      ..clear()
-      ..addAll(podaci);
-  });
+    setState(() {
+      _zadaci
+        ..clear()
+        ..addAll(podaci);
+    });
   }
 
   void _ponovi() {
@@ -56,18 +57,15 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
   Future<void> _dodaj() async {
     final novi = await Navigator.push<Zadatak>(
       context,
-      MaterialPageRoute(
-        builder: (_) => FormaEkran(postojeci: _zadaci),
-      ),
+      MaterialPageRoute(builder: (_) => FormaEkran(postojeci: _zadaci)),
     );
 
     if (!mounted || novi == null) return;
 
     setState(() => _zadaci.add(novi));
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Dodano: ${novi.naslov}')),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Dodano: ${novi.naslov}')));
   }
 
   @override
@@ -83,9 +81,7 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
         future: _ucitavanje,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snap.hasError) {
@@ -93,11 +89,7 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red,
-                  ),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 8),
                   Text('${snap.error}'),
                   const SizedBox(height: 8),
@@ -111,9 +103,7 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
           }
 
           if (_zadaci.isEmpty) {
-            return const Center(
-              child: Text('Nema zadataka'),
-            );
+            return const Center(child: Text('Nema zadataka'));
           }
 
           return ListView.builder(
@@ -123,16 +113,12 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
 
               return ListTile(
                 leading: Icon(
-                  z.zavrsen
-                      ? Icons.check_circle
-                      : Icons.radio_button_unchecked,
+                  z.zavrsen ? Icons.check_circle : Icons.radio_button_unchecked,
                 ),
                 title: Text(
                   z.naslov,
                   style: TextStyle(
-                    decoration: z.zavrsen
-                        ? TextDecoration.lineThrough
-                        : null,
+                    decoration: z.zavrsen ? TextDecoration.lineThrough : null,
                   ),
                 ),
               );
