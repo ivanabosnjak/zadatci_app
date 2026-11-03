@@ -33,10 +33,11 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
 
   late Future<List<Zadatak>> _buduci = _repo.dohvati();
 
-  void _ponovi() {
+  Future<void> _ponovi() async {
     setState(() {
       _buduci = _repo.dohvati();
     });
+    await _buduci;
   }
 
   @override
@@ -46,7 +47,8 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
       body: FutureBuilder<List<Zadatak>>(
         future: _buduci,
         builder: (context, snap) {
-          if (snap.connectionState != ConnectionState.done) {
+          if (snap.connectionState != ConnectionState.done &&
+              snap.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -55,7 +57,7 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon( Icons.error_outline, size: 48, color: Colors.red,),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 8),
                   Text('${snap.error}'),
                   const SizedBox(height: 8),
@@ -74,22 +76,38 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
             return const Center(child: Text('Nema zadataka'));
           }
 
-          return ListView.builder(
-            itemCount: zadaci.length,
-            itemBuilder: (context, i) {
-              final z = zadaci[i];
-              return ListTile(
-                leading: Icon(
-                  z.zavrsen ? Icons.check_circle : Icons.radio_button_unchecked,
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RefreshIndicator(
+                onRefresh: _ponovi,
+                child: ListView.builder(
+                  itemCount: zadaci.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, i) {
+                    final z = zadaci[i];
+                    return ListTile(
+                      leading: Icon(
+                        z.zavrsen
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                      ),
+                      title: Text(
+                        z.naslov,
+                        style: TextStyle(
+                          decoration: z.zavrsen
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                title: Text(
-                  z.naslov,
-                  style: TextStyle(
-                    decoration: z.zavrsen ? TextDecoration.lineThrough : null,
-                  ),
-                ),
-              );
-            },
+              ),
+              Text(
+                "Završeno: ${zadaci.where((z) => z.zavrsen).length} od ${zadaci.length}",
+              ),
+            ],
           );
         },
       ),

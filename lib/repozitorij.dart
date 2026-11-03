@@ -7,7 +7,7 @@ class ZadatciException implements Exception {
   ZadatciException(this.poruka);
 
   @override
-  String toString() => 'ZadatciException: $poruka';
+  String toString() => 'Dogodila se greška: $poruka';
 }
 
 class ZadatakRepozitorij {
