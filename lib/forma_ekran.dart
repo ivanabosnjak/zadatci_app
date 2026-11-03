@@ -84,6 +84,10 @@ class _FormaEkranState extends State<FormaEkran> {
                 onPressed: _spremi,
                 child: const Text('Spremi'),
               ),
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Odustani'),
+              ), 
             ],
           ),
         ),
