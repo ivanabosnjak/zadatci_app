@@ -15,9 +15,7 @@ void main() {
   });
 
   test('ucitaj javlja pogresku kad repozitorij ne uspije', () async {
-    final vm = ZadatciViewModel(
-      ZadatakRepozitorij(neuspjeha: 1),
-    );
+    final vm = ZadatciViewModel(ZadatakRepozitorij(neuspjeha: 1));
 
     await vm.ucitaj();
 
@@ -26,9 +24,7 @@ void main() {
   });
 
   test('dodaj odbija prekratak naslov i obavještava slušatelje', () async {
-    final vm = ZadatciViewModel(
-      ZadatakRepozitorij(prazno: true),
-    );
+    final vm = ZadatciViewModel(ZadatakRepozitorij(prazno: true));
 
     await vm.ucitaj();
 
@@ -52,5 +48,15 @@ void main() {
     vm.promijeniZavrsen(3);
 
     expect(vm.zavrseno, 3);
+  });
+
+  test('ukloni brise zadatak', () async {
+    final vm = ZadatciViewModel(ZadatakRepozitorij());
+
+    await vm.ucitaj();
+    vm.ukloni(1);
+
+    expect(vm.ukupno, 3);
+    expect(vm.zadatci.any((z) => z.id == 1), isFalse);
   });
 }

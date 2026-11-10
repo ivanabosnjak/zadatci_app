@@ -5,10 +5,7 @@ import 'zadatci_viewmodel.dart';
 class StatistikaEkran extends StatelessWidget {
   final ZadatciViewModel vm;
 
-  const StatistikaEkran({
-    super.key,
-    required this.vm,
-  });
+  const StatistikaEkran({super.key, required this.vm});
 
   @override
   Widget build(BuildContext context) {

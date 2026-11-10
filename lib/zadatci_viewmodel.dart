@@ -17,8 +17,11 @@ class ZadatciViewModel extends ChangeNotifier {
   Stanje _stanje = Stanje.ucitavanje;
   String _poruka = '';
 
-  UnmodifiableListView<Zadatak> get zadatci =>
-      UnmodifiableListView(_zadatci);
+  UnmodifiableListView<Zadatak> get zadatci => UnmodifiableListView(_zadatci);
+
+  bool _samoNezavrseni = false;
+
+  bool get samoNezavrseni => _samoNezavrseni;
 
   Stanje get stanje => _stanje;
 
@@ -29,6 +32,13 @@ class ZadatciViewModel extends ChangeNotifier {
   int get zavrseno => _zadatci.where((z) => z.zavrsen).length;
 
   int get preostalo => ukupno - zavrseno;
+
+  Iterable<Zadatak> get prikazani {
+    if (_samoNezavrseni) {
+      return _zadatci.where((z) => !z.zavrsen);
+    }
+    return _zadatci;
+  }
 
   Future<void> ucitaj() async {
     _stanje = Stanje.ucitavanje;
@@ -56,10 +66,7 @@ class ZadatciViewModel extends ChangeNotifier {
 
     if (tekst.length < 3) return false;
 
-    final noviId = _zadatci.fold<int>(
-      0,
-      (n, z) => z.id > n ? z.id : n,
-    ) + 1;
+    final noviId = _zadatci.fold<int>(0, (n, z) => z.id > n ? z.id : n) + 1;
 
     _zadatci.add(Zadatak(id: noviId, naslov: tekst));
 
@@ -73,10 +80,22 @@ class ZadatciViewModel extends ChangeNotifier {
 
     if (i == -1) return;
 
-    _zadatci[i] = _zadatci[i].kopiraj(
-      zavrsen: !_zadatci[i].zavrsen,
-    );
+    _zadatci[i] = _zadatci[i].kopiraj(zavrsen: !_zadatci[i].zavrsen);
 
+    notifyListeners();
+  }
+
+  void ukloni(int id) {
+    final i = _zadatci.indexWhere((z) => z.id == id);
+
+    if (i == -1) return;
+    _zadatci.removeAt(i);
+
+    notifyListeners();
+  }
+
+  void promjenaFiltera(bool samoNezavrseni) {
+    _samoNezavrseni = samoNezavrseni;
     notifyListeners();
   }
 }

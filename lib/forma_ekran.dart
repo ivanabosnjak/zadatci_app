@@ -56,10 +56,7 @@ class _FormaEkranState extends State<FormaEkran> {
                 onFieldSubmitted: (_) => _spremi(),
               ),
               const SizedBox(height: 16),
-              FilledButton(
-                onPressed: _spremi,
-                child: const Text('Spremi'),
-              ),
+              FilledButton(onPressed: _spremi, child: const Text('Spremi')),
             ],
           ),
         ),

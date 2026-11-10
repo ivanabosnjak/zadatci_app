@@ -56,9 +56,8 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
 
     _vm.dodaj(naslov);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Dodano: $naslov')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Dodano: $naslov')));
   }
 
   void _otvoriStatistiku() {
@@ -79,6 +78,20 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
             tooltip: 'Statistika',
             icon: const Icon(Icons.bar_chart),
           ),
+          ListenableBuilder(
+            listenable: _vm,
+            builder: (context, _) {
+              return IconButton(
+                onPressed: () => _vm.promjenaFiltera(!_vm.samoNezavrseni),
+                tooltip: 'Prikaži samo nezavršene',
+                icon: Icon(
+                  _vm.samoNezavrseni
+                      ? Icons.toggle_off_rounded
+                      : Icons.toggle_on_rounded,
+                ),
+              );
+            },
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -91,9 +104,7 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
         builder: (context, _) {
           switch (_vm.stanje) {
             case Stanje.ucitavanje:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
 
             case Stanje.greska:
               return Center(
@@ -118,25 +129,28 @@ class _ZadatciEkranState extends State<ZadatciEkran> {
 
             case Stanje.uspjeh:
               if (_vm.zadatci.isEmpty) {
-                return const Center(
-                  child: Text('Nema zadataka'),
-                );
+                return const Center(child: Text('Nema zadataka'));
               }
 
               return ListView.builder(
-                itemCount: _vm.zadatci.length,
+                itemCount: _vm.prikazani.length,
                 itemBuilder: (context, i) {
-                  final z = _vm.zadatci[i];
+                  final z = _vm.prikazani.elementAt(i);
 
-                  return CheckboxListTile(
-                    value: z.zavrsen,
-                    onChanged: (_) => _vm.promijeniZavrsen(z.id),
-                    title: Text(
-                      z.naslov,
-                      style: TextStyle(
-                        decoration: z.zavrsen
-                            ? TextDecoration.lineThrough
-                            : null,
+                  return Dismissible(
+                    key: ValueKey(z.id),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (_) => _vm.ukloni(z.id),
+                    child: CheckboxListTile(
+                      value: z.zavrsen,
+                      onChanged: (_) => _vm.promijeniZavrsen(z.id),
+                      title: Text(
+                        z.naslov,
+                        style: TextStyle(
+                          decoration: z.zavrsen
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
                       ),
                     ),
                   );
