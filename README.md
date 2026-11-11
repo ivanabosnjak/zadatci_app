@@ -55,3 +55,29 @@ Bolje je zadati boju u temi nego na svakom widgetu jer je tako brže i dosljedni
 Validate() pokreće provjeru unosa forme, a validator vraća null za ispravan unos, jer u tom slucaju su sve provjere uspjesno prodjene i dolazi do linije return null.
 
 Nakon await Navigator.push provjerava mounted da se uvjeri postoji li widget jos uvijek.
+
+## Četvrta zadaća
+
+
+Tri stvari koje ne pripadaju ekranu prema MVVM obrascu:
+1. Učitavanje zadataka iz repozitorija – premjestiti u ViewModel, jer ViewModel upravlja stanjem učitavanja i dohvaćanjem podataka iz repozitorija.
+
+2. Dodjeljivanje ID-a novom zadatku – premjestiti u ViewModel, jer je to poslovna logika vezana uz dodavanje zadataka.
+
+3. Provjera valjanosti naslova zadatka – premjestiti u ViewModel, jer pravila aplikacije ne bi trebala biti dio prikaza (Viewa).
+
+
+Kad bi StatistikaEkran u svom initState stvorio novi:
+```_vm = ZadatciViewModel(ZadatakRepozitorij());```
+nastao bi drugi, neovisni ViewModel.
+
+
+ViewModel izlaže UnmodifiableListView kako bi spriječio da drugi dijelovi aplikacije izravno mijenjaju listu zadataka.
+Što bi moglo poći po zlu? UI se ne bi osvježio, statistika bi mogla biti netočna, zaobišla bi se poslovna logika, kod bi bilo teže održavat.
+
+
+Ako u metodi promijeniZavrsen izostavite notifyListeners() ekran se neće automatski osvježiti nakon promjene statusa zadatka.
+
+
+Samostalne izmjene:
+Brisanje zadatka i toggle da se prikazuju samo nezavršeni zadatci.
